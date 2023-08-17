@@ -9,7 +9,8 @@ agent any // Jenkins will be able to select all available agents
 stages {
         stage('Docker Build'){ // docker build image stage
             parallel {
-                stage('Test On Windows') {
+                stage('Test On Movie Service') {
+                    agent { label "movie" }
                     steps {
                         script {
                         sh '''
@@ -17,6 +18,14 @@ stages {
                         docker build -t $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG ./movie-service
                         sleep 6
                         '''
+                            }
+                        }
+                }
+                stage('Test On Cast Service') {
+
+                    agent { label "movie" }
+                    steps {
+                        script {
                         sh '''
                         docker rm -f jenkins
                         docker build -t $DOCKER_ID/$DOCKER_IMAGE_CAST:$DOCKER_TAG ./cast-service
@@ -24,7 +33,7 @@ stages {
                         '''
                             }
                         }
-            }
+                }
         }
         stage('Docker run'){ // run container from our builded image
                 steps {
