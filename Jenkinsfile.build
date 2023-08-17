@@ -86,6 +86,7 @@ stages {
             }
 
         }
+    }
 }
 post { // send email when the job has failed
     // ..
@@ -96,4 +97,5 @@ post { // send email when the job has failed
              body: "For more info on the pipeline failure, check out the console output at ${env.BUILD_URL}"
     }
     // ..
+    }
 }
