@@ -14,7 +14,7 @@ stages {
                     steps {
                         script {
                         sh '''
-                        docker rm -f jenkins
+                        docker rm -f jenkins_movie
                         docker build -t $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG ./movie-service
                         sleep 6
                         '''
@@ -23,11 +23,11 @@ stages {
                 }
                 stage('Test On Cast Service') {
 
-                    agent { label "movie" }
+                    agent { label "cast" }
                     steps {
                         script {
                         sh '''
-                        docker rm -f jenkins
+                        docker rm -f jenkins_cast
                         docker build -t $DOCKER_ID/$DOCKER_IMAGE_CAST:$DOCKER_TAG ./cast-service
                         sleep 6
                         '''
