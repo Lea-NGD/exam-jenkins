@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  label:
+  {{- include "api.selectorLabels" $ | nindent 4 }}
+data:
+  default.conf: |- 
+  {{ .Files.Get "/home/ubuntu/exam-jenkins/nginx_config.conf" | nindent 4 }}
