@@ -137,7 +137,6 @@ pipeline {
         }
     }
 }
-With the duplicate stages removed, this version of your Jenkinsfile should work as expected. Remember to customize the environment variables and other values as needed for your specific environment.
 
 
 
