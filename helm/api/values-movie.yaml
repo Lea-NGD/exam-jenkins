@@ -10,7 +10,7 @@ image:
 db:
   password: movie-password
   user: movie-user
-  name: movie.database
+  name: movie-database
 
 volume:
   name: postgres-data-movie
