@@ -7,11 +7,11 @@ image:
 
 db:
   password: cast-password
-  user: cast_user
-  name: cast.database
+  user: cast-user
+  name: cast-database
 
 volume:
-  name: postgres_data_cast
+  name: postgres-data-cast
   mountpath: /app
 
 service:
@@ -28,3 +28,11 @@ autoscaling:
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+
+ingress:
+  enabled: true # ou false en fonction de vos besoins
+  hosts:
+    - host: cast.service
+      paths:
+        - path: /api/v1/casts
+  tls: false

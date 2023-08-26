@@ -57,10 +57,10 @@ pipeline {
                     mkdir .kube
                     ls
                     cat $KUBECONFIG > .kube/config
-                    cp helm/api/values-cast.yaml values.yml
+                    cp helm/api/values-cast.yaml values.yaml
                     cat values.yml
-                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                    helm upgrade --install app helm/api --values=values.yml --namespace qa
+                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yaml
+                    helm upgrade --install app api --values=values.yaml --namespace qa
                     '''
                 }
             }

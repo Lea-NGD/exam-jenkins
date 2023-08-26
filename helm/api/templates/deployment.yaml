@@ -62,7 +62,7 @@ spec:
           livenessProbe:
             httpGet:
               path: {{ .Values.image.path }}
-              port: http
+              port: {{ .Values.service.port }}
           readinessProbe:
             httpGet:
               path: {{ .Values.image.path }}

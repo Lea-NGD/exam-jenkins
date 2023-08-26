@@ -16,4 +16,4 @@ spec:
               service:
                 name: {{ include "api.fullname" $ }}
                 port:
-                  number: http
+                  number: 8000

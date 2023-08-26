@@ -9,11 +9,11 @@ image:
 
 db:
   password: movie-password
-  user: movie_user
+  user: movie-user
   name: movie.database
 
 volume:
-  name: postgres_data_movie
+  name: postgres-data-movie
   mountpath: /app
 
 service:
@@ -30,3 +30,11 @@ autoscaling:
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+
+ingress:
+  enabled: true # ou false en fonction de vos besoins
+  hosts:
+    - host: movie.service
+      paths:
+        - path: /api/v1/movie
+  tls: false

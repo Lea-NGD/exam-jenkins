@@ -26,36 +26,34 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: 8000
               protocol: TCP
           volumeMounts:
             - name: nginx-config
-              mountPath: /etc/nginx/conf.d/default.conf 
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+              mountPath: /etc/nginx/conf.d/default.conf
       volumes:
         - name: nginx-config
           configMap:
             name: nginx-config
-          persistentVolumeClaim:
-            claimName: {{ include "api.fullname" . }}
-      {{- with .Values.nodeSelector }}
+      livenessProbe:
+        httpGet:
+          path: /
+          port: http
+      readinessProbe:
+        httpGet:
+          path: /
+          port: http
+      resources:
+        {{- toYaml .Values.resources | nindent 12 }}
+{{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
+{{- end }}
+{{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
+{{- end }}
+{{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+{{- end }}
