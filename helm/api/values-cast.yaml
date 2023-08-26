@@ -17,10 +17,10 @@ volume:
 service:
   name: cast-service
   endpoint: api/v1/casts
-  port: 8000
+  port: 8001
   name_cast: MOVIE_SERVICE_HOST_URL
   databaseUri: postgresql://movie_db_username:movie_db_password@movie_db/movie_db_dev
-  movieServiceHostUrl: http://movie.service:8000/api/v1/movie
+  movieServiceHostUrl: http://movie.service:8001/api/v1/movie
 
 autoscaling:
   enabled: false
