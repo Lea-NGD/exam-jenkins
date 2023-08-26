@@ -60,7 +60,7 @@ pipeline {
                     cp helm/api/values-movie.yaml values-movie.yaml
                     cat values-movie.yaml
                     sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-movie.yaml
-                    helm upgrade --install app api --values=api/values-movie.yaml --namespace qa
+                    helm upgrade --install app ./helm/api --values=values-movie.yaml --namespace qa
                     '''
                 }
             }
@@ -76,10 +76,10 @@ pipeline {
                     mkdir .kube
                     ls
                     cat $KUBECONFIG > .kube/config
-                    cp /helm/api/values-movie.yaml values.yml
-                    cat values.yml
-                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                    helm upgrade --install app jenkins-api --values=values.yml --namespace dev
+                    cp helm/api/values-movie.yaml values-movie.yaml
+                    cat values-movie.yaml
+                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-movie.yaml
+                    helm upgrade --install app ./helm/api --values=values-movie.yaml --namespace dev
                     '''
                 }
             }
@@ -95,10 +95,10 @@ pipeline {
                     mkdir .kube
                     ls
                     cat $KUBECONFIG > .kube/config
-                    cp /helm/api/values-movie.yaml values.yml
-                    cat values.yml
-                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                    helm upgrade --install app jenkins-api --values=values.yml --namespace staging
+                    cp helm/api/values-movie.yaml values-movie.yaml
+                    cat values-movie.yaml
+                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-movie.yaml
+                    helm upgrade --install app ./helm/api --values=values-movie.yaml --namespace staging
                     '''
                 }
             }
@@ -109,7 +109,7 @@ pipeline {
             }
             when {
                 expression {
-                    return env.BRANCH_NAME == 'prod'
+                    return env.BRANCH_NAME == 'master'
                 }
             }
             steps {
@@ -119,10 +119,10 @@ pipeline {
                     mkdir .kube
                     ls
                     cat $KUBECONFIG > .kube/config
-                    cp /helm/api/values-movie.yaml values.yml
-                    cat values.yml
-                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                    helm upgrade --install app jenkins-api --values=values.yml --namespace prod
+                    cp helm/api/values-movie.yaml values-movie.yaml
+                    cat values-movie.yaml
+                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-movie.yaml
+                    helm upgrade --install app ./helm/api --values=values-movie.yaml --namespace prod
                     '''
                 }
             }

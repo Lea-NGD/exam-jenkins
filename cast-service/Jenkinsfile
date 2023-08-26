@@ -108,9 +108,7 @@ pipeline {
                 KUBECONFIG = credentials("config") // retrieve kubeconfig from secret file called config saved on Jenkins
             }
             when {
-                expression {
-                    return env.BRANCH_NAME == 'master'
-                }
+                branch 'master'
             }
             steps {
                 script {
