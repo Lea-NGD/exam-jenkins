@@ -6,4 +6,4 @@ metadata:
   {{- include "api.selectorLabels" $ | nindent 4 }}
 data:
   default.conf: |- 
-  {{ .Files.Get "/home/ubuntu/exam-jenkins/nginx_config.conf" | nindent 4 }}
+  {{ .Files.Get "config/default.conf" | nindent 4 }}

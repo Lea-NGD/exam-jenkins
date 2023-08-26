@@ -1,6 +1,7 @@
 replicaCount: 1
 
 image:
+  name: movie-app
   repository: lngd/api-movie
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
@@ -10,7 +11,7 @@ image:
 db:
   password: movie-password
   user: movie-user
-  name: movie-database
+  name: movie-db
 
 volume:
   name: postgres-data-movie
@@ -22,7 +23,7 @@ service:
   port: 8002
   name_cast: CAST_SERVICE_HOST_URL
   databaseUri: postgresql://movie_db_username:movie_db_password@movie_db/movie_db_dev
-  castServiceHostUrl: http://cast.service:8002/api/v1/casts
+  castServiceHostUrl: http://cast-service:8002/api/v1/casts
 
 autoscaling:
   enabled: false
@@ -34,7 +35,7 @@ autoscaling:
 ingress:
   enabled: true # ou false en fonction de vos besoins
   hosts:
-    - host: movie.service
+    - host: movie-service
       paths:
         - path: /api/v1/movie
   tls: false

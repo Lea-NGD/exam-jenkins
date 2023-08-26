@@ -1,36 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "api.fullname" . }}
+  name: {{ .Values.image.name }}
   labels:
     {{- include "api.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "api.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
         {{- include "api.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ .Values.image.name }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          # image: "lngd/api-cast:v.19.0"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: POSTGRES_PASSWORD
@@ -40,14 +28,9 @@ spec:
                   key: {{ .Values.db.password }}
             - name: POSTGRES_USER
               valueFrom:
-                configMapKeyRef:
-                  name: postgres-config
-                  key: {{ .Values.db.user }}
+              value: {{ .Values.db.user }}
             - name: POSTGRES_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-config
-                  key: {{ .Values.db.name }}
+              value: {{ .Values.db.name }}
             - name: DATABASE_URI
               value: {{ .Values.service.databaseUri }}
             - name: {{ .Values.service.name_cast }}
@@ -56,32 +39,20 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /api/v1
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /api/v1
+              port: http
           volumeMounts:
             - name: {{ .Values.volume.name }}
               mountPath: {{ .Values.volume.mountpath }}
-          livenessProbe:
-            httpGet:
-              path: {{ .Values.image.path }}
-              port: {{ .Values.service.port }}
-          readinessProbe:
-            httpGet:
-              path: {{ .Values.image.path }}
-              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
         - name: {{ .Values.volume.name }} # Nom du volume pour le stockage des données persistantes
           persistentVolumeClaim:
             claimName: {{ include "api.fullname" . }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}

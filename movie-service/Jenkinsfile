@@ -60,7 +60,7 @@ pipeline {
                     cat $KUBECONFIG > .kube/config
                     cp helm/api/values-movie.yaml values-movie.yaml
                     cat values-movie.yaml
-                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-movie.yaml
+                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-cast.yaml
                     helm upgrade --install app ./helm/api --values=values-movie.yaml --namespace qa
                     '''
                 }
@@ -79,7 +79,7 @@ pipeline {
                     cat $KUBECONFIG > .kube/config
                     cp helm/api/values-movie.yaml values-movie.yaml
                     cat values-movie.yaml
-                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-movie.yaml
+                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-cast.yaml
                     helm upgrade --install app ./helm/api --values=values-movie.yaml --namespace dev
                     '''
                 }
@@ -98,7 +98,7 @@ pipeline {
                     cat $KUBECONFIG > .kube/config
                     cp helm/api/values-movie.yaml values-movie.yaml
                     cat values-movie.yaml
-                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-movie.yaml
+                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-cast.yaml
                     helm upgrade --install app ./helm/api --values=values-movie.yaml --namespace staging
                     '''
                 }
@@ -121,8 +121,9 @@ pipeline {
                     ls
                     cat $KUBECONFIG > .kube/config
                     cp helm/api/values-movie.yaml values-movie.yaml
+                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-cast.yaml
                     cat values-movie.yaml
-                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-movie.yaml
+
                     helm upgrade --install app ./helm/api --values=values-movie.yaml --namespace prod
                     '''
                 }

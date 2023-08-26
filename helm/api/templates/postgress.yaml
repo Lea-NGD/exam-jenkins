@@ -39,15 +39,9 @@ spec:
                   name: postgres-pass
                   key: {{ .Values.db.password }}
             - name: POSTGRES_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-config
-                  key: {{ .Values.db.user }}
+              value: {{ .Values.db.user }}
             - name: POSTGRES_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-config
-                  key: {{ .Values.db.name }}
+              value: {{ .Values.db.name }}
             - name: DATABASE_URI
               value: {{ .Values.service.databaseUri }}
             - name: {{ .Values.service.name_cast }}
@@ -59,29 +53,18 @@ spec:
           volumeMounts:
             - name: {{ .Values.volume.name }}
               mountPath: /var/lib/postgresql/data/
-          livenessProbe:
-            httpGet:
-              path: {{ .Values.image.path }}
-              port: http
-          readinessProbe:
-            httpGet:
-              path: {{ .Values.image.path }}
-              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
         - name: {{ .Values.volume.name }} # Nom du volume pour le stockage des données persistantes
           persistentVolumeClaim:
             claimName: {{ include "api.fullname" . }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      livenessProbe:
+        httpGet:
+          path: /
+          port: http
+      readinessProbe:
+        httpGet:
+          path: /
+          port: http
+

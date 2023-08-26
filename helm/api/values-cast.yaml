@@ -1,6 +1,7 @@
 replicaCount: 1
 
 image:
+  name: cast-app
   repository: lngd/api-cast
   pullPolicy: IfNotPresent
   tag: ""
@@ -8,7 +9,7 @@ image:
 db:
   password: cast-password
   user: cast-user
-  name: cast-database
+  name: cast-db
 
 volume:
   name: postgres-data-cast
@@ -20,7 +21,7 @@ service:
   port: 8001
   name_cast: MOVIE_SERVICE_HOST_URL
   databaseUri: postgresql://movie_db_username:movie_db_password@movie_db/movie_db_dev
-  movieServiceHostUrl: http://movie.service:8001/api/v1/movie
+  movieServiceHostUrl: http://movie-service:8001/api/v1/movie
 
 autoscaling:
   enabled: false
@@ -32,7 +33,7 @@ autoscaling:
 ingress:
   enabled: true # ou false en fonction de vos besoins
   hosts:
-    - host: cast.service
+    - host: cast-service
       paths:
         - path: /api/v1/casts
   tls: false
