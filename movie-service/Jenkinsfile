@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        DOCKER_ID = "lngd" // Remplacez ceci par votre identifiant Docker
+        DOCKER_ID = "lngd" // Replace this with your Docker ID
         DOCKER_IMAGE_MOVIE = "api-movie"
         DOCKER_TAG = "v.${BUILD_ID}.0"
     }
@@ -21,7 +21,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    docker run -d -p 80:80 --name jenkins-movie $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG
+                    docker run -d -p 80:80 --name jenkins $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG
                     sleep 10
                     '''
                 }
@@ -46,101 +46,99 @@ pipeline {
                 }
             }
         }
-stage('Deploiement en qa'){
-        environment
-        {
-        KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
-        }
+        stage('Deploiement en qa') {
+            environment {
+                KUBECONFIG = credentials("config") // retrieve kubeconfig from secret file called config saved on Jenkins
+            }
             steps {
                 script {
-                sh '''
-                rm -Rf .kube
-                mkdir .kube
-                ls
-                cat $KUBECONFIG > .kube/config
-                cp /helm/api/values-movie.yaml values.yml
-                cat values.yml
-                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                helm upgrade --install app jenkins-api --values=values.yml --namespace qa
-                '''
+                    sh '''
+                    rm -Rf .kube
+                    mkdir .kube
+                    ls
+                    cat $KUBECONFIG > .kube/config
+                    cp helm/api/values-movie.yaml values-movie.yaml
+                    cat values-movie.yaml
+                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-movie.yaml
+                    helm upgrade --install app api --values=api/values-movie.yaml --namespace qa
+                    '''
                 }
             }
-
         }
-stage('Deploiement en dev'){
-        environment
-        {
-        KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
-        }
+        stage('Deploiement en dev') {
+            environment {
+                KUBECONFIG = credentials("config") // retrieve kubeconfig from secret file called config saved on Jenkins
+            }
             steps {
                 script {
-                sh '''
-                rm -Rf .kube
-                mkdir .kube
-                ls
-                cat $KUBECONFIG > .kube/config
-                cp /helm/api/values-movie.yaml values.yml
-                cat values.yml
-                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                helm upgrade --install app jenkins-api --values=values.yml --namespace dev
-                '''
+                    sh '''
+                    rm -Rf .kube
+                    mkdir .kube
+                    ls
+                    cat $KUBECONFIG > .kube/config
+                    cp /helm/api/values-movie.yaml values.yml
+                    cat values.yml
+                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                    helm upgrade --install app jenkins-api --values=values.yml --namespace dev
+                    '''
                 }
             }
-
         }
-stage('Deploiement en staging'){
-        environment
-        {
-        KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
-        }
+        stage('Deploiement en staging') {
+            environment {
+                KUBECONFIG = credentials("config") // retrieve kubeconfig from secret file called config saved on Jenkins
+            }
             steps {
                 script {
-                sh '''
-                rm -Rf .kube
-                mkdir .kube
-                ls
-                cat $KUBECONFIG > .kube/config
-                cp /helm/api/values-movie.yaml values.yml
-                cat values.yml
-                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                helm upgrade --install app jenkins-api --values=values.yml --namespace staging
-                '''
+                    sh '''
+                    rm -Rf .kube
+                    mkdir .kube
+                    ls
+                    cat $KUBECONFIG > .kube/config
+                    cp /helm/api/values-movie.yaml values.yml
+                    cat values.yml
+                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                    helm upgrade --install app jenkins-api --values=values.yml --namespace staging
+                    '''
                 }
             }
-
         }
-stage('Deploiement en prod'){
-        environment
-        {
-        KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
-        }
+        stage('Deploiement en prod') {
+            environment {
+                KUBECONFIG = credentials("config") // retrieve kubeconfig from secret file called config saved on Jenkins
+            }
             when {
                 expression {
-                    return env.BRANCH_NAME == 'master'
+                    return env.BRANCH_NAME == 'prod'
                 }
             }
             steps {
                 script {
-                sh '''
-                rm -Rf .kube
-                mkdir .kube
-                ls
-                cat $KUBECONFIG > .kube/config
-                cp /helm/api/values-movie.yaml values.yml
-                cat values.yml
-                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                helm upgrade --install app jenkins-api --values=values.yml --namespace prod
-                '''
+                    sh '''
+                    rm -Rf .kube
+                    mkdir .kube
+                    ls
+                    cat $KUBECONFIG > .kube/config
+                    cp /helm/api/values-movie.yaml values.yml
+                    cat values.yml
+                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                    helm upgrade --install app jenkins-api --values=values.yml --namespace prod
+                    '''
                 }
             }
         }
+    }
     post {
         failure {
             echo "This will run if the job failed"
             mail to: "leanugue@gmail.com",
                 subject: "${env.JOB_NAME} - Build # ${env.BUILD_ID} has failed",
                 body: "For more info on the pipeline failure, check out the console output at ${env.BUILD_URL}"
-            }
         }
     }
 }
+
+
+
+
+
