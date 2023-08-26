@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: lngd/api-movie
+  repository: lngd/api-cast
   pullPolicy: IfNotPresent
   tag: ""
 
