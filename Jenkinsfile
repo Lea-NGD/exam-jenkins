@@ -28,7 +28,7 @@ pipeline {
                     curl localhost
                     docker run -d -p 80:8000 --name jenkins-cast $DOCKER_ID/$DOCKER_IMAGE_CAST:$DOCKER_TAG
                     sleep 10
-                    curl localhost:81
+                    curl localhost:80
                     docker rm -f jenkins-cast
                     '''
                 }
