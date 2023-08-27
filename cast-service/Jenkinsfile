@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    curl localhost:81
+                    curl localhost:8003
                     docker rm -f jenkins-cast
                     '''
                     

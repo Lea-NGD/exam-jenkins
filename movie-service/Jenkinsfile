@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    curl localhost:82
+                    curl localhost:8004
                     docker rm -f jenkins-movie
                     '''
                 }
