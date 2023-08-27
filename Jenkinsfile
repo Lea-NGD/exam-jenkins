@@ -2,96 +2,97 @@ pipeline {
     environment {
         DOCKER_ID = "lngd" // Replace this with your Docker ID
         DOCKER_IMAGE_MOVIE = "api-movie"
-        DOCKER_TAG = "v.${BUILD_ID}.0"
+        // DOCKER_TAG = "v.${BUILD_ID}.0"
+        DOCKER_TAG = "latest"
     }
     agent any
     stages {
-        stage('Docker Build Movie') {
-            steps {
-                script {
-                    sh '''
-                    docker rm -f jenkins-movie
-                    docker build -t $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG ./movie-service
-                    sleep 6
-                    '''
-                }
-            }
-        }
-        stage('Docker Run Movie') {
-            steps {
-                script {
-                    sh '''
-                    docker run -d -p 80:80 --name jenkins-movie $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG
-                    sleep 10
-                    '''
-                }
-            }
-        }
-        stage('Test Acceptance Movie') {
-            steps {
-                script {
-                    sh '''
-                    curl localhost
-                    docker rm -f jenkins-movie
-                    '''
-                }
-            }
-        }
-        stage('Docker Build Cast') {
-            steps {
-                script {
-                    sh '''
-                    docker rm -f jenkins-cast
-                    docker build -t $DOCKER_ID/$DOCKER_IMAGE_CAST:$DOCKER_TAG ./cast-service
-                    sleep 6
-                    '''
-                }
-            }
-        }
-        stage('Docker Run Cast') {
-            steps {
-                script {
-                    sh '''
-                    docker run -d -p 80:80 --name jenkins-cast $DOCKER_ID/$DOCKER_IMAGE_CAST:$DOCKER_TAG
-                    sleep 10
-                    '''
-                }
-            }
-        }
-        stage('Test Acceptance Cast') {
-            steps {
-                script {
-                    sh '''
-                    curl localhost
-                    '''
+        // stage('Docker Build Movie') {
+        //     steps {
+        //         script {
+        //             sh '''
+        //             docker rm -f jenkins-movie
+        //             docker build -t $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG ./movie-service
+        //             sleep 6
+        //             '''
+        //         }
+        //     }
+        // }
+        // stage('Docker Run Movie') {
+        //     steps {
+        //         script {
+        //             sh '''
+        //             docker run -d -p 80:80 --name jenkins-movie $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG
+        //             sleep 10
+        //             '''
+        //         }
+        //     }
+        // }
+        // stage('Test Acceptance Movie') {
+        //     steps {
+        //         script {
+        //             sh '''
+        //             curl localhost
+        //             docker rm -f jenkins-movie
+        //             '''
+        //         }
+        //     }
+        // }
+        // stage('Docker Build Cast') {
+        //     steps {
+        //         script {
+        //             sh '''
+        //             docker rm -f jenkins-cast
+        //             docker build -t $DOCKER_ID/$DOCKER_IMAGE_CAST:$DOCKER_TAG ./cast-service
+        //             sleep 6
+        //             '''
+        //         }
+        //     }
+        // }
+        // stage('Docker Run Cast') {
+        //     steps {
+        //         script {
+        //             sh '''
+        //             docker run -d -p 80:80 --name jenkins-cast $DOCKER_ID/$DOCKER_IMAGE_CAST:$DOCKER_TAG
+        //             sleep 10
+        //             '''
+        //         }
+        //     }
+        // }
+        // stage('Test Acceptance Cast') {
+        //     steps {
+        //         script {
+        //             sh '''
+        //             curl localhost
+        //             '''
                     
-                }
-            }
-        }
-        stage('Docker Push Movie') {
-            environment {
-                DOCKER_PASS = credentials("DOCKER_HUB_PASS")
-            }
-            steps {
-                script {
-                    sh "docker login -u $DOCKER_ID -p $DOCKER_PASS"
-                    sh "docker push $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG"
-                    sh "docker logout"
-                }
-            }
-        }
-        stage('Docker Push Cast') {
-            environment {
-                DOCKER_PASS = credentials("DOCKER_HUB_PASS")
-            }
-            steps {
-                script {
-                    sh "docker login -u $DOCKER_ID -p $DOCKER_PASS"
-                    sh "docker push $DOCKER_ID/$DOCKER_IMAGE_CAST:$DOCKER_TAG"
-                    sh "docker logout"
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
+        // stage('Docker Push Movie') {
+        //     environment {
+        //         DOCKER_PASS = credentials("DOCKER_HUB_PASS")
+        //     }
+        //     steps {
+        //         script {
+        //             sh "docker login -u $DOCKER_ID -p $DOCKER_PASS"
+        //             sh "docker push $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG"
+        //             sh "docker logout"
+        //         }
+        //     }
+        // }
+        // stage('Docker Push Cast') {
+        //     environment {
+        //         DOCKER_PASS = credentials("DOCKER_HUB_PASS")
+        //     }
+        //     steps {
+        //         script {
+        //             sh "docker login -u $DOCKER_ID -p $DOCKER_PASS"
+        //             sh "docker push $DOCKER_ID/$DOCKER_IMAGE_CAST:$DOCKER_TAG"
+        //             sh "docker logout"
+        //         }
+        //     }
+        // }
         stage('Deploiement en qa Movie') {
             environment {
                 KUBECONFIG = credentials("config") // retrieve kubeconfig from secret file called config saved on Jenkins
