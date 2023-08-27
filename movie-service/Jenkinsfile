@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    docker run -d -p 8004:80 --name jenkins-movie $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG
+                    docker run -d -p 80:80 --name jenkins-movie $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG
                     sleep 10
                     '''
                 }
@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    curl localhost:8004
+                    curl localhost
                     docker rm -f jenkins-movie
                     '''
                 }
