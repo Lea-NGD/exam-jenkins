@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    docker run -d -p 82:80 --name jenkins-movie $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG
+                    docker run -d -p 8004:8000 --name jenkins-movie $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG
                     sleep 10
                     '''
                 }
