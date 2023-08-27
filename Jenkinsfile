@@ -2,6 +2,7 @@ pipeline {
     environment {
         DOCKER_ID = "lngd" // Replace this with your Docker ID
         DOCKER_IMAGE_MOVIE = "api-movie"
+        DOCKER_IMAGE_CAST = "api-cast"
         DOCKER_TAG = "v.${BUILD_ID}.0"
     }
     agent any
