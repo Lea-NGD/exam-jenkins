@@ -11,8 +11,6 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    docker rm -f jenkins-movie
-                    docker rm -f jenkins-cast
                     docker build -t $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG ./movie-service
                     docker build -t $DOCKER_ID/$DOCKER_IMAGE_CAST:$DOCKER_TAG ./cast-service
                     sleep 6
@@ -26,10 +24,12 @@ pipeline {
                     sh '''
                     docker run -d -p 80:8000 --name jenkins-movie $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG
                     sleep 10
+                    docker rm -f jenkins-movie
                     curl localhost
                     docker run -d -p 80:8000 --name jenkins-cast $DOCKER_ID/$DOCKER_IMAGE_CAST:$DOCKER_TAG
                     sleep 10
-                    curl localhost
+                    curl localhost:81
+                    docker rm -f jenkins-cast
                     '''
                 }
             }
