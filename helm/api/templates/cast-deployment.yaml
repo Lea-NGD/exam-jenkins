@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cast-deployment
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: cast
+          securityContext:
+          securityContext:
+          image: "{{ .Values.image_cast.repository }}:{{ .Values.image_cast.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: Always
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-pass
+                  key: cast-password
+            - name: POSTGRES_USER
+              valueFrom:
+              value: cast-user
+            - name: POSTGRES_DB
+              value: cast-db
+            - name: DATABASE_URI
+              value: postgresql://movie_db_username:movie_db_password@movie_db/movie_db_dev
+            - name: MOVIE_SERVICE_HOST_URL
+              value: http://movie-service:8001/api/v1/movie
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: cast-data
+              mountPath: /app
+      volumes:
+        - name: cast-data # Nom du volume pour le stockage des données persistantes
+          persistentVolumeClaim:
+            claimName: pvc-jenkins

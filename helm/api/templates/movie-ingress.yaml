@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: movie-ingress
+  labels:
+    app: api
+spec:
+  ingressClassName: traefik-int
+  rules:
+    - host: movie-service
+      http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: movie-service
+                port:
+                  number: 8002

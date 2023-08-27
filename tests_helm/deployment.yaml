@@ -1,36 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.db.name }}
-  labels:
-    {{- include "api.labels" . | nindent 4 }}
+  name: {{ .Values.image.deployment }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
-      {{- include "api.selectorLabels" . | nindent 6 }}
+      app: api
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
-        {{- include "api.selectorLabels" . | nindent 8 }}
+        app: api
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Values.db.name }}
+        - name: {{ .Values.image.name }}
+        # - name: "test"
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "postgres:12.1-alpine"
+          securityContext:
+          # image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.test }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: POSTGRES_PASSWORD
@@ -39,6 +27,7 @@ spec:
                   name: postgres-pass
                   key: {{ .Values.db.password }}
             - name: POSTGRES_USER
+              valueFrom:
               value: {{ .Values.db.user }}
             - name: POSTGRES_DB
               value: {{ .Values.db.name }}
@@ -47,24 +36,13 @@ spec:
             - name: {{ .Values.service.name_cast }}
               value: {{ .Values.service.castServiceHostUrl }}
           ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
+            - containerPort: {{ .Values.service.port }}
           volumeMounts:
             - name: {{ .Values.volume.name }}
-              mountPath: /var/lib/postgresql/data/
+              mountPath: {{ .Values.volume.mountpath }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
         - name: {{ .Values.volume.name }} # Nom du volume pour le stockage des données persistantes
           persistentVolumeClaim:
             claimName: {{ include "api.fullname" . }}
-      livenessProbe:
-        httpGet:
-          path: /
-          port: http
-      readinessProbe:
-        httpGet:
-          path: /
-          port: http
-

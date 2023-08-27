@@ -1,18 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx
+  name: nginx-deployment
   labels:
-    {{- include "api.labels" . | nindent 4 }}
+    app: api
+    tier: nginx
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "api.selectorLabels" . | nindent 6 }}
+      app: api
+      tier: nginx
   template:
     metadata:
       labels:
-        {{- include "api.selectorLabels" . | nindent 8 }}
+        app: api
+        tier: nginx
     spec:
       containers:
         - name: nginx
@@ -20,7 +23,7 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
-              containerPort: 8081
+              containerPort: 8080
               protocol: TCP
           volumeMounts:
             - name: nginx-config
@@ -29,11 +32,3 @@ spec:
         - name: nginx-config
           configMap:
             name: nginx-config
-      livenessProbe:
-        httpGet:
-          path: /
-          port: http
-      readinessProbe:
-        httpGet:
-          path: /
-          port: http

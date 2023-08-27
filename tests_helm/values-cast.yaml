@@ -1,15 +1,18 @@
 replicaCount: 1
 
 image:
-  name: cast-app
+  deployment: cast-deployment
+  name: cast
   repository: lngd/api-cast
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   tag: ""
+  test: lngd/api-cast:latest
 
 db:
   password: cast-password
   user: cast-user
   name: cast-db
+  port: 4000
 
 volume:
   name: postgres-data-cast

@@ -1,17 +1,19 @@
 replicaCount: 1
 
 image:
-  name: movie-app
+  deployment: movie-app
+  name: movie
   repository: lngd/api-movie
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
-  path: "/movie"
+  test: lngd/api-movie:latest
 
 db:
   password: movie-password
   user: movie-user
   name: movie-db
+  port: 4001
 
 volume:
   name: postgres-data-movie
@@ -38,4 +40,7 @@ ingress:
     - host: movie-service
       paths:
         - path: /api/v1/movie
-  tls: false
+  tls:
+    false
+
+    # image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movie-db
+  labels:
+    app: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+      tier: postgress
+  template:
+    metadata:
+      labels:
+        app: api
+        tier: postgress
+    spec:
+      containers:
+        - name: movie-db
+          image: "postgres:12.1-alpine"
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-pass
+                  key: movie-password
+            - name: POSTGRES_USER
+              value: movie-user
+            - name: POSTGRES_DB
+              value: movie-db
+            - name: DATABASE_URI
+              value: postgresql://movie_db_username:movie_db_password@movie_db/movie_db_dev
+            - name: CAST_SERVICE_HOST_URL
+              value: http://cast-service:8002/api/v1/casts
+          ports:
+            - name: http
+              containerPort: 4001
+              protocol: TCP
+          volumeMounts:
+            - name: postgres-data-movie
+              mountPath: /var/lib/postgresql/data/
+      volumes:
+        - name: postgres-data-movie # Nom du volume pour le stockage des données persistantes
+          persistentVolumeClaim:
+            claimName: pvc-jenkins
+

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: movie-db
+  labels:
+    app: api
+    tier: postgress
+spec:
+  type: ClusterIP
+  ports:
+    - port: 4001
+      targetPort: 4001
+      protocol: TCP
+  selector:
+    app: api
+    tier: postgress

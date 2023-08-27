@@ -1,24 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.image.name }}
+  name: {{ .Values.db.name }}
   labels:
-    {{- include "api.labels" . | nindent 4 }}
+    app: api
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "api.selectorLabels" . | nindent 6 }}
+      app: api
+      tier: postgress
   template:
     metadata:
       labels:
-        {{- include "api.selectorLabels" . | nindent 8 }}
+        app: api
+        tier: postgress
     spec:
       containers:
-        - name: {{ .Values.image.name }}
+        - name: {{ .Values.db.name }}
           securityContext:
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          # image: "lngd/api-cast:v.19.0"
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "postgres:12.1-alpine"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: POSTGRES_PASSWORD
@@ -27,7 +29,6 @@ spec:
                   name: postgres-pass
                   key: {{ .Values.db.password }}
             - name: POSTGRES_USER
-              valueFrom:
               value: {{ .Values.db.user }}
             - name: POSTGRES_DB
               value: {{ .Values.db.name }}
@@ -37,22 +38,15 @@ spec:
               value: {{ .Values.service.castServiceHostUrl }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.db.port }}
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /api/v1
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /api/v1
-              port: http
           volumeMounts:
             - name: {{ .Values.volume.name }}
-              mountPath: {{ .Values.volume.mountpath }}
+              mountPath: /var/lib/postgresql/data/
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
         - name: {{ .Values.volume.name }} # Nom du volume pour le stockage des données persistantes
           persistentVolumeClaim:
             claimName: {{ include "api.fullname" . }}
+

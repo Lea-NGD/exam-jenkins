@@ -3,7 +3,8 @@ kind: ConfigMap
 metadata:
   name: nginx-config
   label:
-  {{- include "api.selectorLabels" $ | nindent 4 }}
+    app: api
+    tier: nginx
 data:
   default.conf: |- 
   {{ .Files.Get "config/default.conf" | nindent 4 }}
