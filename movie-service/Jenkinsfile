@@ -7,13 +7,27 @@ pipeline {
     }
     agent any
     stages {
+        stage('Check Changes in movie-service') {
+            steps {
+                script {
+                    def changes = sh(script: 'movie-service/check_changes.sh', returnStatus: true)
+                    if (changes == 0) {
+                        echo "Changes detected in movie-service directory. Proceeding with pipeline."
+                    } else {
+                        echo "No changes detected in movie-service directory. Skipping pipeline."
+                        currentBuild.result = 'ABORTED'
+                        return
+                    }
+                }
+            }
+        }
         stage('Docker Build') {
             steps {
                 script {
                     sh '''
                     docker rm -f jenkins-movie
                     docker build -t $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG ./movie-service
-                    sleep 6
+                    sleep 6 
                     '''
                 }
             }

@@ -107,7 +107,7 @@ pipeline {
                     cp helm/api/values-movie.yaml values-movie.yaml
                     cat values-movie.yaml
                     sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-movie.yaml
-                    helm upgrade --install app ./helm/api --values=values-movie.yaml --namespace qa
+                    helm upgrade --install app-movie ./helm/api --values=values-movie.yaml --namespace qa
                     '''
                 }
             }
@@ -126,7 +126,7 @@ pipeline {
                     cp helm/api/values-cast.yaml values-cast.yaml
                     cat values-cast.yaml
                     sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-cast.yaml
-                    helm upgrade --install app ./helm/api --values=values-cast.yaml --namespace qa
+                    helm upgrade --install app-cast ./helm/api --values=values-cast.yaml --namespace qa
                     '''
                 }
             }
@@ -145,7 +145,7 @@ pipeline {
                     cp helm/api/values-movie.yaml values-movie.yaml
                     cat values-movie.yaml
                     sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-movie.yaml
-                    helm upgrade --install app ./helm/api --values=values-movie.yaml --namespace dev
+                    helm upgrade --install app-movie ./helm/api --values=values-movie.yaml --namespace dev
                     '''
                 }
             }
@@ -164,7 +164,7 @@ pipeline {
                     cp helm/api/values-cast.yaml values-cast.yaml
                     cat values-cast.yaml
                     sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-cast.yaml
-                    helm upgrade --install app ./helm/api --values=values-cast.yaml --namespace dev
+                    helm upgrade --install app-cast ./helm/api --values=values-cast.yaml --namespace dev
                     '''
                 }
             }
@@ -183,7 +183,7 @@ pipeline {
                     cp helm/api/values-movie.yaml values-movie.yaml
                     cat values-movie.yaml
                     sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-movie.yaml
-                    helm upgrade --install app ./helm/api --values=values-movie.yaml --namespace staging
+                    helm upgrade --install app-movie ./helm/api --values=values-movie.yaml --namespace staging
                     '''
                 }
             }
@@ -202,7 +202,7 @@ pipeline {
                     cp helm/api/values-cast.yaml values-cast.yaml
                     cat values-cast.yaml
                     sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-cast.yaml
-                    helm upgrade --install app ./helm/api --values=values-cast.yaml --namespace staging
+                    helm upgrade --install app-cast ./helm/api --values=values-cast.yaml --namespace staging
                     '''
                 }
             }
@@ -227,7 +227,7 @@ pipeline {
                     sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-movie.yaml
                     cat values-movie.yaml
 
-                    helm upgrade --install app ./helm/api --values=values-movie.yaml --namespace prod
+                    helm upgrade --install app-movie ./helm/api --values=values-movie.yaml --namespace prod
                     '''
                 }
             }
@@ -249,7 +249,7 @@ pipeline {
                     cp helm/api/values-cast.yaml values-cast.yaml
                     cat values-cast.yaml
                     sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-cast.yaml
-                    helm upgrade --install app ./helm/api --values=values-cast.yaml --namespace prod
+                    helm upgrade --install app-cast ./helm/api --values=values-cast.yaml --namespace prod
                     '''
                 }
             }

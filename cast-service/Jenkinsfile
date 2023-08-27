@@ -6,6 +6,20 @@ pipeline {
     }
     agent any
     stages {
+        stage('Check Changes in cast-service') {
+            steps {
+                script {
+                    def changes = sh(script: 'cast-service/check_changes.sh', returnStatus: true)
+                    if (changes == 0) {
+                        echo "Changes detected in cast-service directory. Proceeding with pipeline."
+                    } else {
+                        echo "No changes detected in cast-service directory. Skipping pipeline."
+                        currentBuild.result = 'ABORTED'
+                        return
+                    }
+                }
+            }
+        }
         stage('Docker Build') {
             steps {
                 script {
