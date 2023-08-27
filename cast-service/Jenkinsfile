@@ -10,6 +10,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                    docker rm -f jenkins-cast
                     docker build -t $DOCKER_ID/$DOCKER_IMAGE_CAST:$DOCKER_TAG ./cast-service
                     sleep 6
                     '''
@@ -31,7 +32,6 @@ pipeline {
                 script {
                     sh '''
                     curl localhost
-                    docker rm -f jenkins-cast
                     '''
                     
                 }
