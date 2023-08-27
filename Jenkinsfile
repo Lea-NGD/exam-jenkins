@@ -105,7 +105,7 @@ pipeline {
                 }
             }
         }
-        stage('Deploiement en prod Movie') {
+        stage('Deploiement en prod') {
             environment {
                 KUBECONFIG = credentials("config") // retrieve kubeconfig from secret file called config saved on Jenkins
             }
