@@ -10,7 +10,9 @@ RUN apt-get update \
 
 RUN pip install -r /app/requirements.txt \
     && rm -rf /root/.cache/pip
-    
+
 COPY . /app/
 
-CMD ["uvicorn", "app.main:app", "--reload"]
+EXPOSE 80
+
+CMD ["uvicorn", "app.main:app", "--proxy-headers", "--host", "0.0.0.0", "--port", "80"]

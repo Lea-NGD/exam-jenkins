@@ -10,8 +10,6 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    docker rm -f jenkins
-                    docker rm -f jenkins-movie
                     docker build -t $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG ./movie-service
                     sleep 6
                     '''
@@ -22,7 +20,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    docker run -d -p 80:80 --name jenkins-movie $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG
+                    docker run -d -p 82:80 --name jenkins-movie $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG
                     sleep 10
                     '''
                 }
@@ -31,7 +29,10 @@ pipeline {
         stage('Test Acceptance') {
             steps {
                 script {
-                    sh 'curl localhost'
+                    sh '''
+                    docker rm -f jenkins-movie
+                    curl localhost:82
+                    '''
                 }
             }
         }
