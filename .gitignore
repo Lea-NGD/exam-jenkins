@@ -3,4 +3,4 @@ __pycache__
 .vscode
 .idea
 
-tests_helm/
+tests
