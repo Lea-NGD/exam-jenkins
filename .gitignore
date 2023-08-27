@@ -2,4 +2,4 @@ env
 __pycache__
 .vscode
 .idea
-tests_helm/*
+tests_helm/
