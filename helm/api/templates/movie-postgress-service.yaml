@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: movie-db
+  name: movie_db
   labels:
     app: api
     tier: postgress
