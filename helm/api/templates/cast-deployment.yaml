@@ -30,7 +30,7 @@ spec:
             - name: POSTGRES_DB
               value: cast-db
             - name: DATABASE_URI
-              value: postgresql://movie_db_username:movie_db_password@movie_db/movie_db_dev
+              value: postgresql://movie_db_username:movie_db_password@movie-db/movie_db_dev
             - name: MOVIE_SERVICE_HOST_URL
               value: http://movie-service:8001/api/v1/movie
           ports:

@@ -2,11 +2,11 @@ replicaCount: 1
 
 image_cast:
   repository: lngd/api-cast
-  tag: v.42.0
+  tag: ""
 
 image_movie:
   repository: lngd/api-movie
-  tag: latest
+  tag: ""
 
 autoscaling:
   enabled: false
