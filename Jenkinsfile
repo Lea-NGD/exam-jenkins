@@ -11,8 +11,9 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    docker build -t $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG movie-service
-                    docker build -t $DOCKER_ID/$DOCKER_IMAGE_CAST:$DOCKER_TAG cast-service
+                    set -x
+                    docker build -t $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG /home/ubuntu/exam-jenkins/movie-service
+                    docker build -t $DOCKER_ID/$DOCKER_IMAGE_CAST:$DOCKER_TAG /home/ubuntu/exam-jenkins/cast-service
                     sleep 6
                     '''
                 }
