@@ -12,7 +12,8 @@ pipeline {
             steps {
                 script {
                     def currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
-                    env.currentBranch = currentBranch // Définir la variable d'environnement currentBranch
+                    env.currentBranch = currentBranch
+                    echo "Current branch is: ${currentBranch}"
                 }
             }
         }
