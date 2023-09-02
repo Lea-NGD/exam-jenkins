@@ -8,12 +8,6 @@ pipeline {
     agent any
     stages {
         stage('Docker Build') {
-            when {
-                anyOf {
-                    changeset "cast-service/**"
-                    changeset "movie-service/**"
-                }
-            }
             steps {
                 script {
                     sh '''
@@ -25,12 +19,6 @@ pipeline {
             }
         }
         stage('Docker Run and Test') {
-            when {
-                anyOf {
-                    changeset "cast-service/**"
-                    changeset "movie-service/**"
-                }
-            }
             steps {
                 script {
                     sh '''
@@ -49,12 +37,6 @@ pipeline {
         stage('Docker Push') {
             environment {
                 DOCKER_PASS = credentials("DOCKER_HUB_PASS")
-            }
-            when {
-                anyOf {
-                    changeset "cast-service/**"
-                    changeset "movie-service/**"
-                }
             }
             steps {
                 script {
