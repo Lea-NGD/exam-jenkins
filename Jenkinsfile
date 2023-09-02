@@ -8,15 +8,7 @@ pipeline {
     agent any
     stages {
 
-        stage('Checkout') {
-            steps {
-                script {
-                    def currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
-                    env.currentBranch = currentBranch
-                    echo "Current branch is: ${currentBranch}"
-                }
-            }
-        }
+
         stage('Docker Build') {
             steps {
                 script {
@@ -115,6 +107,18 @@ pipeline {
                 }
             }
         }
+
+        stage('Checkout Branch for Deploy Prod on master branch') {
+            steps {
+                script {
+                    sh 'git checkout master'
+                    def currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    env.currentBranch = currentBranch
+                    echo "Current branch is: ${currentBranch}"
+                }
+            }
+        }
+
         stage('Deploiement en prod') {
             environment {
                 KUBECONFIG = credentials("config") // retrieve kubeconfig from secret file called config saved on Jenkins
