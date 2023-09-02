@@ -123,11 +123,11 @@ pipeline {
             environment {
                 KUBECONFIG = credentials("config") // retrieve kubeconfig from secret file called config saved on Jenkins
             }
-            // when {
-            //     expression {
-            //         return env.currentBranch == 'master'
-            //     }
-            // }
+            when {
+                expression {
+                    return env.currentBranch == 'master'
+                }
+            }
             steps {
                 script {
                     sh '''
