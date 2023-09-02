@@ -8,17 +8,14 @@ pipeline {
     agent any
     stages {
 
-
         stage('Checkout') {
             steps {
                 script {
                     def currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    env.currentBranch = currentBranch // Définir la variable d'environnement currentBranch
                 }
             }
         }
-
-
-
         stage('Docker Build') {
             steps {
                 script {
@@ -122,7 +119,9 @@ pipeline {
                 KUBECONFIG = credentials("config") // retrieve kubeconfig from secret file called config saved on Jenkins
             }
             when {
-                currentBranch == 'master'
+                expression {
+                    return env.currentBranch == 'master'
+                }
             }
             steps {
                 script {
