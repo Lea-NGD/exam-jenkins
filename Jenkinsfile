@@ -7,6 +7,17 @@ pipeline {
     }
     agent any
     stages {
+
+
+        stage('Checkout') {
+            steps {
+                script {
+                    def currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                }
+            }
+
+
+
         stage('Docker Build') {
             steps {
                 script {
@@ -110,7 +121,7 @@ pipeline {
                 KUBECONFIG = credentials("config") // retrieve kubeconfig from secret file called config saved on Jenkins
             }
             when {
-                branch 'master'
+                currentBranch == 'master'
             }
             steps {
                 script {
