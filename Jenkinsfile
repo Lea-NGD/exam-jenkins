@@ -15,6 +15,7 @@ pipeline {
                     def currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
                 }
             }
+        }
 
 
 
