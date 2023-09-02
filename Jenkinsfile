@@ -8,10 +8,15 @@ pipeline {
     agent any
     stages {
         stage('Docker Build') {
+            when {
+                anyOf {
+                    changeset "cast-service/**"
+                    changeset "movie-service/**"
+                }
+            }
             steps {
                 script {
                     sh '''
-                    set -x
                     docker build -t $DOCKER_ID/$DOCKER_IMAGE_MOVIE:$DOCKER_TAG /home/ubuntu/exam-jenkins/movie-service
                     docker build -t $DOCKER_ID/$DOCKER_IMAGE_CAST:$DOCKER_TAG /home/ubuntu/exam-jenkins/cast-service
                     sleep 6
@@ -20,6 +25,12 @@ pipeline {
             }
         }
         stage('Docker Run and Test') {
+            when {
+                anyOf {
+                    changeset "cast-service/**"
+                    changeset "movie-service/**"
+                }
+            }
             steps {
                 script {
                     sh '''
@@ -38,6 +49,12 @@ pipeline {
         stage('Docker Push') {
             environment {
                 DOCKER_PASS = credentials("DOCKER_HUB_PASS")
+            }
+            when {
+                anyOf {
+                    changeset "cast-service/**"
+                    changeset "movie-service/**"
+                }
             }
             steps {
                 script {
@@ -111,9 +128,7 @@ pipeline {
                 KUBECONFIG = credentials("config") // retrieve kubeconfig from secret file called config saved on Jenkins
             }
             when {
-                expression {
-                    return env.GIT_BRANCH == 'master'
-                }
+                branch 'master'
             }
             steps {
                 script {
