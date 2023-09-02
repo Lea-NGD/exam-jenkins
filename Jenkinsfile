@@ -118,22 +118,22 @@ pipeline {
             environment {
                 KUBECONFIG = credentials("config") // retrieve kubeconfig from secret file called config saved on Jenkins
             }
-            when {
-                expression {
-                    return env.currentBranch == 'master'
-                }
-            }
+            // when {
+            //     expression {
+            //         return env.currentBranch == 'master'
+            //     }
+            // }
             steps {
                 script {
                     sh '''
+                    git branch
                     rm -Rf .kube
                     mkdir .kube
                     ls
                     cat $KUBECONFIG > .kube/config
                     cp helm/api/values.yaml values.yaml
-                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yaml
                     cat values.yaml
-
+                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yaml
                     helm upgrade --install app ./helm/api --values=values.yaml --namespace prod
                     '''
                 }
